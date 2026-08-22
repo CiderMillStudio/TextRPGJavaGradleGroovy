@@ -38,14 +38,14 @@ public class GameLoop {
     // immediately, rather than reading a stale cached value.
     private volatile boolean running = false;
 
-    // Begins the game loop, ticking at a fixed rate of 50ms (20 ticks/sec).
+    // Begins the game loop, ticking at a fixed rate of 250ms (4 ticks/sec).
     public void start() {
         running = true;
 
         loopHandle = scheduler.scheduleAtFixedRate(
                 this::tick,
                 0,          // fire the first tick immediately
-                50,                   // then every 50ms after that
+                250,                   // then every 50ms after that
                 TimeUnit.MILLISECONDS
         );
     }
@@ -69,11 +69,18 @@ public class GameLoop {
             FrameOutput frame = new FrameOutput(30, 90, pixelCharGenerator());
             frame.printFrame();
 
+            numFramesTillAutoStop++;
+
+
 
             // check whatever condition means "the game is over"
             if (shouldStop()) {
                 stop();
             }
+
+            if (numFramesTillAutoStop >= 20)
+                stop();
+
         } catch (Exception e) {
             // If a tick throws unhandled, the scheduler would otherwise
             // silently cancel all future ticks with no obvious symptom.
@@ -85,9 +92,6 @@ public class GameLoop {
 
     // The 'return false' is a placeholder -- wire this to actual exit conditions
     private boolean shouldStop() {
-        numFramesTillAutoStop++;
-        if (numFramesTillAutoStop >= 50)
-            return true;
 
         return false;
 
@@ -129,7 +133,7 @@ public class GameLoop {
         int i = 0;
 
         while (i <= (30 * 90)) {
-            PixelChar pixel = new PixelChar('0', 0, PixelColor.BLACK);
+            PixelChar pixel = new PixelChar('0', 0, PixelColor.RED);
             pixels.add(pixel);
             i++;
         }

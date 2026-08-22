@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 public class Main {
 
@@ -51,7 +50,6 @@ public class Main {
         }
 
 
-
         String json = mapper.writeValueAsString(gameData);
 
         System.out.println("loading gamedata from the following json fields: \n" + json);
@@ -78,16 +76,14 @@ public class Main {
 
 
 
-        // Terminate Game
-        /*
+        /* Terminate Game
          *
          * Decide whether or not to save game
          * If yes, save game and exit the game
          *
-         *
          * */
 
-        File saveFile = new File(System.getProperty("user.home"), ".textrpg/gamedata.json");
+        File saveFile = new File(System.getProperty("user.dir"), ".textrpg/gamedata.json");
         saveFile.getParentFile().mkdirs();
 
         mapper.writerWithDefaultPrettyPrinter().writeValue(saveFile, gameData);

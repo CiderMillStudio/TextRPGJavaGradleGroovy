@@ -1,0 +1,261 @@
+~
+~
+~
+Java Text RPG - Game Dev Doc (GDD) 
+
+v0.1: Planning / organizing how to build the program
+
+Date Created: August 8th, 2026
+
+Goals of RPG Game:
+
+1. Toggle between WORLD_EXPLORATION, LOCAL_EXPLORATION, COMBAT, TRADE, and CAMP
+    WORLD_EXPLORATION:
+        you are presented with a map overview with ASCII art showing the different world regions, and you see your
+        player character's location as well. You can move your player character using the arrow keys.
+    LOCAL_EXPLORATION:
+        Local_Exploration is a text-based adventure using a mix of ASCII art (which portrays each PLACE_OF_INTEREST)
+        and text narration and choice selection to
+        progress through a given area. Examples of LOCAL_EXPLORATION areas include VILLAGES (shop, get quests, mingle),
+        DUNGEONS (Combat, traps, loot), RUINS (lore, charms, respite), and ENCOUNTERS (bandits, wandering merchants,
+        strange omens, foraging/hunting opportunities)
+    COMBAT:
+        Combat is a turn-based system relying on rolling a d12 to attack and take actions. Will be able to take actions
+        such as FIGHT, USE_ITEM (or change weapon),
+    TRADE:
+        Can occur within a SHOP (for example in a VILLAGE), or via a WANDERING_MERCHANT. Player can exchange COINS for
+        ITEMS (buy) or ITEMS for COINS (sell).
+    CAMP:
+        When player is feeling weary (low hp), can MAKE_CAMP and engage in CAMP_EVENTS, including HUNT, FISH (if near
+        body of water), FORAGE, COOK, CRAFT, REST.
+
+2. Player may accept QUESTS (through the TALK mode) that have one or several objectives
+    (some quests must have objectives completed in a certain order, others may be completed at will)
+3. This RPG System has 4 stats: Strength, Dexterity, Charisma, and Intelligence
+4. There are 6 classes that come with various tools and Stat Bonuses
+    Warrior: +2 to initial strength, +1 to strength per level up by default
+        Wields Sword, draws from Strength to attack with sword
+    Archer:  +2 to initial dexterity, +1 to dexterity per level up by default
+        Wields Bow, draws from dex to attack with bow
+    Rogue:   +2 to initial dexterity, +2 to initial charisma, +1 to either dexterity or charisma per level up (alternates)
+        Wields dagger, draws from dex to attack with dagger
+    Wizard:  +2 to initial intellect, + 1 to intellect per level up by default
+        Casts with Staff, draws from intellect to cast
+    Bard:    +2 to initial charisma, +1 to charisma per level up by default
+        Casts with Bard_Focus (item of bardic inspiration, could be an instrument, a book, a puppet), draws from charisma
+    Monk:    +2 to initial strength, +2 to initial intelligence, +1 to either strength or intelligence per level up (alternates)
+        Wields MonkStaff, draws from strength and intelligence to attack with MonkStaff
+    Artificer: +2 to initial intelligence, +1 to intelligence per level up by default
+        Casts wtih Artificer_Focus (item of Artificer_Focus, could be a contraption, a hacked-magical item, an
+        altered-tinkered-bow), draws from intelligence and a stat determined by the Artificier's item of inspiration
+
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+
+
+
+GAME ENGINE LOGIC
+
+Game initialization:
+- Run through game initialization scripts
+- Load Data if applicable
+- Enter Start Menu GUI
+- Initialize Chosen Game
+
+
+
+Game Loop (12 FPS to keep things running fast):
+- For any GAMEOBJECTS who are brand new to the Game, run their OnAwake methods
+- For any GAMEOBJECTS who are brand new to the Game, run their Start methods
+- Run through the Update method for each GAMEOBJECT 
+- Solve Collisions, place GAMEOBJECTS
+- Solve which GUI menus are open, and their states
+- Render Visusals (print GameObjects and Menus on new screen)
+- Render Audio (if needed)
+- Listen for input from player
+
+
+
+Visuals: 
+
+- Game resolution 90 x 30 ASCII characters (row 1 is border, 2-23 is screen, row 24 is the border, and rows 25-29 is GUI, and row 30 is border
+- Each character represents a PIXEL. 
+- PIXELS have three variables: CHARACTER, COLOR, LAYER (int) (thus, one sprite may contain pixels of different layers.
+- SPRITES consist of HEIGHT, WIDTH, X_location (of top-left most pixel), Y_location (of top-left most pixel) (0,0 is located at the top-left of the screen),
+	 and a PIXEL ARRAY defining what the Sprite looks like.
+- SPRITES can be assigned to GAMEOBJECTS
+
+
+000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                        SCREEN                                          0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+0----------------------------------------------------------------------------------------0
+0                                                                                        0
+0                                         GUI                                            0
+0                                                                                        0
+0                                                                                        0
+0                                                                                        0
+000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+
+Collisions:
+-  COLLISION_MAPS can be assigned to GAMEOBJECTS which dictate which pixels within a GAMEOBJECT are collidable.
+-  COLLISION_MAPS consist of an int array indicating LEVEL of collidability for each pixel:
+	0=non-collidable, 1=collidable_on_ground_level, 2=collidable_while_jumping, 3=collidable_impassable
+	Where 0 can be walked through, where 1 can be jumped or flown over, where 2 can only be flown over, and 3 cannot be passed (without teleportation, that is?). 
+- Thus, if a GAMEOBJECT has both a SPRITE map and a COLLISION_MAP, and you have two GAMEOBJECTS approaching each other, whether or not the GAMEOBJECT can proceed forward depends on if their collision maps meet. Ghosts might have a Collision map of 0 entirely, whereas Skeletons might have a collision map of 1. A little home might have it's perimeter as collision map 2 but the interior might be collision map 0.
+- COLLISION_EVENT is when a GAMEOBJECT moves such that it becomes directly adjacent with another collidable GAMEOBJECT. At this point, movement is restricted and movement is denied in that direction.
+
+
+PlayerController:
+- Will listen for input regarding whether the player wishes to move or take an action.
+- WASD or Arrow keys to move player and to move through UI menus
+- ENTER to make a choice in UI menus and navigate to submenus
+- E to INTERACT with GAMEOBJECTS (Interactables)
+- M to toggle the GAME_MENU (shows inventory, quests, fast travel map)
+- ESC to toggle the PAUSE_MENU (shows "Save and Exit", "Settings", etc...)
+- T to toggle betweeen GAMEOBJECTS on screen, which you can then press E and interact with (either from a distance or up close, and this will cause variation in how you may interact with them).
+- Fastkeys: 
+	- F -> Fire/attack with primary weapon
+	- T -> Talk (E but specific for TALKING) 
+ 
+
+GameManager:
+- GameManager is a Singleton Class that contains instances of important manager classes like:
+	- PlayerManager (contains InventoryManager, PlayerStatsManager, etc...)
+	- SceneManager (contains the current scene, provides scene information to the visualization renderer. Loads new scenes in, is sure to save each scene's state to ensure persistence).
+	- QuestManager (Contains that state of each quest)
+	- NPC_Manager (contains the states of each NPC)
+	- CalendarManager (keeps track of the in-game date and time, as certain events only happen at certain times of the day/year) 
+	- etc...
+
+
+
+
+
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+
+
+
+
+
+GAME STRUCTURE PLANNING (Classes, interfaces, etc...)
+
+~
+~
+
+CLASSES
+
+
+ENTITY: An Entity is anything with stats (HP, Strength, Dex, Charisma, Int) that the player may engage with. An Entity also has a ANSII Symbol, a ANSII Symbol Color, a descriptor, and other attributes that other living things would have (An attack sound effect, a damage sound effect, a die sound effect). Subclasses of Entity may have additional functionality (for example, Merchant can set up TRADE mode with the player, and Animals can be PET via pettable interface, etc...) 
+
+GameObject (something that can appear on the screen as something within the game, has coordinates, ...)
+
+GameObject 
+--> Entity -->
+	Player (additionally has controls, inventory, level tracking, and other things that only the player has)
+	NPC --> (additionally has loot, exp on slay, interactability)
+		EntityHostile --> 
+			Skeleton
+			Bandit
+			Wolf
+			GiantRat
+			...
+		EntityFriendly --> (additionally has ways for player to command the ally by setting ALLY_MODE via the Commandable Interface)
+			Pet (Pettable, Commandable, Combattable)
+			PartyMember (Commandable, Combattable)
+		EntityNeutral (neutral entity) -->
+			Villager
+			Merchant
+			AnimalNeutral
+			DungeonDweller
+
+
+
+(Non-GameObjects)
+
+Scene -->
+	
+	WorldScene (for WORLD_EXPLORATION GameMode, allows player to simulate fast-travel between different Place(s)OfInterest) 
+		Note that the WorldScene is foggy and obscured, but reveals more and more as you explore, like Elden Ring Map Fog) 
+	
+	PlaceOfInterest --> (for LOCAL_EXPLORATION GameMode, can walk around these places, find interesting things, etc...)
+		Village (Shops, a Bank, maybe an Inn, maybe a farm) 
+		Dungeon (explore, hostile, multiple levels deep)  
+		Ruins (explore, non-hostile, solve riddles and such, acquire charms, players are encouraged to come back to these over time and apply what they've learned)
+		NaturalWonder (makes for an ideal place to camp...)
+		FertilePlains (can farm here, might require you to liberate these plains from crooked bandits, and return to these locations periodically to harvest your crops)
+
+
+	
+		
+
+
+
+
+~
+~
+
+INTERFACES (contracts)
+Interactable (for objects or things that don't speak, but provide some sort of interactability/info)
+Talkable (for Entity who can speak)
+Combattable (for Entity who can engage in combat, and hence can be slayed)
+Lootable (for Entity or Thing which can be looted for items and coins)
+Shoppable (for Entity who player can Shop with)
+Tamable (for AnimalNeutrals who can be Tamed into Pets)
+Commandable (for Entity that the player can command, usually allies in battle)
+
+
+RECORDS
+
+
+
+ENUMS:
+PlayerClass --> WARRIOR, ARCHER, ROGUE, WIZARD, BARD, MONK, ARTIFICER
+GameMode --> WORLD_EXPLORATION, LOCAL_EXPLORATION, COMBAT, TRADE, CAMP
+AllyMode --> OFFENSE, SUPPORT, RETREAT			
+
+
+
+

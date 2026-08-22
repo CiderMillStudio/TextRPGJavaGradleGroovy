@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.gradleup.shadow' version '8.3.5'
 }
 
 group = 'org.example'
@@ -19,4 +20,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+// Tell the jar which class has your main() method
+jar {
+    manifest {
+        attributes 'Main-Class': 'net.wady.Main'
+    }
 }

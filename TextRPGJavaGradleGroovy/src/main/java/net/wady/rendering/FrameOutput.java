@@ -22,7 +22,6 @@ public class FrameOutput {
 
 
     public void printFrame() {
-        clearScreen();
         int row = 1;
         int column = 1;
 
@@ -54,17 +53,11 @@ public class FrameOutput {
 
         }
 
-        System.out.println(lineBuilder);
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + lineBuilder);
 
         //System.out.println("Whole screen should have printed now.");
 
 
-    }
-
-    public static void clearScreen() {
-        // \033[H moves the cursor to the top left; \033[2J clears the screen
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
     }
 
 
