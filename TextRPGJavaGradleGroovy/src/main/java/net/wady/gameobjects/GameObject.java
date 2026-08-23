@@ -12,10 +12,10 @@ public class GameObject {
 
 
 
+
     public GameObject() {
         this.name = "GameObject_unnamed";
         this.position = new Vector(0,0);
-
     }
 
     public GameObject(String name, Vector position) {
