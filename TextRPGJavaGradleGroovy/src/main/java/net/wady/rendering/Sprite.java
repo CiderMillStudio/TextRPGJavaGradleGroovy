@@ -1,8 +1,9 @@
 package net.wady.rendering;
 
+import net.wady.gameobjects.Component;
 import net.wady.physics.Vector;
 
-public class Sprite {
+public class Sprite implements Component {
 
     // Sprite.size: dimensions (width, height) of a sprite
     private Vector size;

@@ -1,10 +1,12 @@
 package net.wady.physics;
 
+import net.wady.gameobjects.Component;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Collider {
+public class Collider implements Component {
 
     // --- COLLIDER PARAMETERS ---
 
@@ -27,61 +29,62 @@ public class Collider {
 
 
 
-    // --- COLLIDER CONSTRUCTORS ---
+    // --- USE THE BUILDER PATTERN INSTEAD OF MANY CONSTRUCTORS ---
 
-    // makes a 1x1 collidable mask that is NOT a trigger:
-    public Collider() {
-        this.size = new Vector(1,1);
-        this.collidabilityMatrix = new boolean[] {true};
-        this.isTrigger = false;
+    private Collider(Builder b) {
+        this.size = b.size;
+        this.collidabilityMatrix = b.collidabilityMatrix;
+        this.isTrigger = b.isTrigger;
     }
 
-    // makes a custom-sized collider mask where all the pixels are collidable, assumes isTrigger is false:
-    public Collider(Vector size) {
-        this.size = size;
+    // The Builder Class will be nested within the Collider class (this way they can share private parameters, and this
+    // Builder class can only be called via Collider.Builder (enhances privacy, ensures that other objects can't call this Builder class).
+    public static class Builder {
+        // Notice how Builder's parameters are PRIVATE, yet the outside class (Collider) can still access them as if they're public.
+        // This is because that when classes are nested within another class, they share access to their private fields
+        // Thus, Builder (The inside class) has access to Collider's private fields, and vice versa
+        private Vector size = new Vector (1,1);
+        private boolean[] collidabilityMatrix;
+        private boolean isTrigger = false;
 
-        boolean[] collidabilityMatrix = new boolean[size.getX() * size.getY()];
-        Arrays.fill(collidabilityMatrix, true);
-        this.collidabilityMatrix = collidabilityMatrix;
+        public Builder size(Vector size) {
+            this.size = size;
+            return this; // CHAINABLE
+        }
 
-        this.isTrigger = false;
+        public Builder collidabilityMatrix(boolean[] collidabilityMatrix) {
+            this.collidabilityMatrix = collidabilityMatrix;
+            return this; // CHAINABLE
+        }
+
+        public Builder isTrigger(boolean isTrigger) {
+            this.isTrigger = isTrigger;
+            return this; // CHAINABLE
+        }
+
+        public Collider build() {
+            if (collidabilityMatrix == null) {
+                collidabilityMatrix = new boolean[size.getX() * size.getY()];
+                Arrays.fill(collidabilityMatrix, true);
+            }
+            return new Collider(this);
+        }
+
+
+        // An example of how one might build a Collider:
+
+        /*
+        Collider wall = new Builder()
+                .size(new Vector(1, 3))
+                .isTrigger(false)
+                .build();
+        */
+
+        // notice that if collidabilityMatrix is not incorporated, it is fully collidable by default.
+        // likewise, isTrigger and size also have default values of false and (1, 1), respectively.
+
     }
 
-    // makes a custom-sized collider mask with a customized collidability matrix:
-    public Collider(Vector size, boolean[] collidabilityMatrix) {
-        this.size = size;
-        this.collidabilityMatrix = collidabilityMatrix;
-        this.isTrigger = false;
-    }
-
-
-    // makes a custom-sized collidability mask with a customized collidability matrix with the option of enabling
-    // isTrigger mode. This allows you to have the collider be a trigger with a custom shape instead of a solid
-    // rectangle
-    public Collider(Vector size, boolean[] collidabilityMatrix, boolean isTrigger) {
-        this.size = size;
-        this.collidabilityMatrix = collidabilityMatrix;
-        this.isTrigger = isTrigger;
-    }
-
-    // makes a 1 x 1 collider with the option of it being isTrigger mode.
-    public Collider (boolean isTrigger) {
-        this.size = new Vector(1,1);
-        this.collidabilityMatrix = new boolean[] {true};
-        this.isTrigger = isTrigger;
-    }
-
-    // makes a custom-sized collidable/triggerable mask where all units are collidable/triggerable
-    public Collider(Vector size, boolean isTrigger) {
-        this.size = size;
-        this.isTrigger = isTrigger;
-
-        boolean[] collidabilityMatrix = new boolean[size.getX() * size.getY()];
-        Arrays.fill(collidabilityMatrix, true);
-        this.collidabilityMatrix = collidabilityMatrix;
-
-
-    }
 
 
 

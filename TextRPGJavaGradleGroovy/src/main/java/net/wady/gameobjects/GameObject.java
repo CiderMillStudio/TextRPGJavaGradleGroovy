@@ -5,12 +5,14 @@ import net.wady.rendering.PixelChar;
 import net.wady.rendering.PixelColor;
 import net.wady.rendering.Sprite;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 public class GameObject {
     private String name;
     private Vector position;
-    private Sprite sprite;
-
-
+    private final Map<Class<? extends Component>, Component> components = new HashMap<>();
 
 
     public GameObject() {
@@ -21,14 +23,31 @@ public class GameObject {
     public GameObject(String name, Vector position) {
         this.name = name;
         this.position = position;
-        this.sprite = new Sprite(new PixelChar('#',0, PixelColor.BLUE));
+
     }
 
-    public GameObject(String name, Vector position, Sprite sprite) {
-        this.name = name;
-        this.position = position;
-        this.sprite = sprite;
+    public GameObject addComponent(Component component) {
+        components.put(component.getClass(), component);
+        return this; // thus CHAINABLE!!! i.e. new GameObject("moose").addComponent(X).addComponent(Y)...
     }
+
+    // the syntax below (<T extends Component> is a generic method type parameter, and just specifies that whatever T is, it must extend Component.
+    // T is helpful because then we can return T. T is different from ? (wildcards), because you can't link the ? of wildcards to the return statement.
+    public <T extends Component> Optional<T> getComponent(Class<T> type) {
+        // Notice how here, we're returning an optional which contains Type T (so we must use T instead of ?)
+        return Optional.ofNullable(type.cast(components.get(type)));
+    }
+
+
+    public boolean hasComponent(Class<? extends Component> type) {
+        // Notice how here, we're simply returning a boolean value without returning type T (thus we can use wildcard  ? notation instead of t)
+        return components.containsKey(type);
+    }
+
+    public void removeComponent(Class<? extends Component> type) {
+        components.remove(type);
+    }
+
 
     public String getName() {
         return name;
