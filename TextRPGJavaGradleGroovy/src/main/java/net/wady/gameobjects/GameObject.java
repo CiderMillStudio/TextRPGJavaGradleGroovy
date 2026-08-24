@@ -13,7 +13,7 @@ public class GameObject {
     private String name;
     private Vector position;
     private final Map<Class<? extends Component>, Component> components = new HashMap<>();
-
+    private boolean hasStarted = false;
 
     public GameObject() {
         this.name = "GameObject_unnamed";
@@ -23,8 +23,11 @@ public class GameObject {
     public GameObject(String name, Vector position) {
         this.name = name;
         this.position = position;
-
     }
+
+    // All Components (Sprite, Collider, etc...) implement the Component Interface, which allows us to create a system
+    // based off of the Component Pattern (which relies on java.util.Optional, and a hashmap called 'components') to
+    // create GameObjects with whichever components we choose.
 
     public GameObject addComponent(Component component) {
         components.put(component.getClass(), component);
@@ -49,6 +52,44 @@ public class GameObject {
     }
 
 
+
+
+    // --- START, AWAKE, UPDATE ---
+
+
+    // --- Overriden by subclasses / components, default to doing nothing ---
+    protected void onAwake() {};
+    protected void onStart() {};
+    protected void onUpdate() {};
+
+
+    // Called by the engine / scene, never overridden
+    public final void awake() {
+        onAwake();
+        for (Component c : components.values()) {
+            c.onAwake(this);
+        }
+    }
+
+    public final void start() {
+        if (hasStarted) return;
+        hasStarted = true;
+        onStart();
+        for (Component c : components.values()) {
+            c.onStart(this);
+        }
+    }
+
+    public final void update() {
+        onUpdate();
+        for (Component c : components.values()) {
+            c.onUpdate(this);
+        }
+    }
+
+
+    // --- GETTERS ---
+
     public String getName() {
         return name;
     }
@@ -56,8 +97,5 @@ public class GameObject {
     public Vector getPosition(){
         return position;
     }
-
-
-
 
 }

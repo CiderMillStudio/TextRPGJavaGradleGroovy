@@ -45,12 +45,12 @@ public class GameLoop {
         loopHandle = scheduler.scheduleAtFixedRate(
                 this::tick,
                 0,          // fire the first tick immediately
-                250,                   // then every 50ms after that
+                250,                   // then every 250ms after that
                 TimeUnit.MILLISECONDS
         );
     }
 
-    // The heartbeat of the game. Runs once per tick, every 50ms.
+    // The heartbeat of the game. Runs once per tick, every 250ms.
     private void tick() {
         try {
             if (!running) return;
