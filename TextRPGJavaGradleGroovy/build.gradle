@@ -1,6 +1,8 @@
 plugins {
     id 'java'
-    id 'com.gradleup.shadow' version '8.3.5'
+    id 'com.gradleup.shadow' version '8.3.11'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 group = 'org.example'
@@ -18,13 +20,26 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.1'
 }
 
-test {
-    useJUnitPlatform()
+
+javafx {
+    version = "26.0.2"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
+
 
 // Tell the jar which class has your main() method
 jar {
     manifest {
-        attributes 'Main-Class': 'net.wady.Main'
+        attributes 'Main-Class': 'net.wady.Launcher'
     }
 }
+
+application {
+    mainClass = 'net.wady.Launcher'
+}
+
+
+test {
+    useJUnitPlatform()
+}
+

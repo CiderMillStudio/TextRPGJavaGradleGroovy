@@ -60,7 +60,7 @@ public class GameObject {
     // --- Overriden by subclasses / components, default to doing nothing ---
     protected void onAwake() {};
     protected void onStart() {};
-    protected void onUpdate() {};
+    protected void onUpdate(double deltaTime) {};
 
 
     // Called by the engine / scene, never overridden
@@ -80,10 +80,10 @@ public class GameObject {
         }
     }
 
-    public final void update() {
-        onUpdate();
+    public final void update(double deltaTime) {
+        onUpdate(deltaTime);
         for (Component c : components.values()) {
-            c.onUpdate(this);
+            c.onUpdate(this, deltaTime);
         }
     }
 
