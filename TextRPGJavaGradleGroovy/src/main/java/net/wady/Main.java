@@ -1,5 +1,10 @@
 package net.wady;
 
+import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import net.wady.data.GameData;
 import net.wady.gameengine.GameLoop;
 
@@ -12,6 +17,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,12 +31,38 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/org.openjfx/scene.fxml"));
+        //Parent root = FXMLLoader.load(getClass().getResource("/org.openjfx/scene.fxml"));
 
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/org.openjfx/styles.css").toExternalForm());
+        Group root = new Group();
 
-        stage.setTitle("JavaFX and Gradle");
+        Scene scene = new Scene(root, Color.BLACK);
+        //scene.getStylesheets().add(getClass().getResource("/org.openjfx/styles.css").toExternalForm());
+
+        Image icon = new Image(getClass().getResourceAsStream("/images/app/icon.png"));
+        stage.getIcons().add(icon);
+        stage.setTitle("Text RPG v0.0");
+        stage.setWidth(1200);
+        stage.setHeight(800);
+        stage.setResizable(false);
+        //stage.setFullScreen(true);
+        //stage.setFullScreenExitHint("Press 'q' to escape");
+        //stage.setFullScreenExitKeyCombination(KeyCombination.valueOf("q"));
+
+        Text text = new Text();
+        text.setText("A quick brown fox jumps \nover the lazy dog.");
+        text.setFill(Color.LIGHTSEAGREEN);
+        text.setX(600);
+        text.setY(400);
+        text.setFont(Font.font("Verdana", 50));
+
+        root.getChildren().add(text);
+
+
+
+
+
+        // can also create a scene with dimensions and color!
+        // stage.setScene(scene, 600, 600, Color.LIGHTSKYBLUE)
         stage.setScene(scene);
         stage.show();
 
@@ -38,7 +71,7 @@ public class Main extends Application {
 
     public static void main(String[] args) throws IOException {
 
-        launch(args);
+        launch(args); // an inherited class from Application (JavaFX)
 
         // Open Start Menu
         /*

@@ -78,7 +78,7 @@ public class GameLoop {
                 stop();
             }
 
-            if (numFramesTillAutoStop >= 20)
+            if (numFramesTillAutoStop >= 4)
                 stop();
 
         } catch (Exception e) {
