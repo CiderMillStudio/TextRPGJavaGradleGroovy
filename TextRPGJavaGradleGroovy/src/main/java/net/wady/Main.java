@@ -21,10 +21,15 @@ public class Main extends Application {
     private static final int COLS = 90;
     private static final int ROWS = 55;
     private static final int SCALE = 3; // must be an integer (2 -> 16x16 pixel cells)
+    private static final int maxFPS = 40; // 20 frames per second (max)
 
     private BackgroundGrid bgGrid;
     private TerminalGrid fgGrid;
-    private int tick = 0;
+    private int currentTick = 0;
+
+    private static final long NS_PER_TICK = 1_000_000_000L / maxFPS;
+    private long lastTime = -1;
+    private long accumulator = 0;
 
 
     @Override
@@ -52,29 +57,56 @@ public class Main extends Application {
         stage.setResizable(false);
         stage.show();
 
+
+
         new AnimationTimer() {
             @Override
             public void handle(long now) {
-                // prove the loop runs every frame: an animated @ bouncing on row 12
-                tick++;
-                int x = 2 + (tick / 50) % 70;
-                fgGrid.setGlyph(x, 12,'@', Color.YELLOW);
-                bgGrid.setBackground(x, 12, Color.RED);
-                if (x > 2) {
-                    fgGrid.setGlyph(x - 1, 12, ' ', Color.WHITE);
-                    bgGrid.setBackground(x - 1, 12, Color.BLACK);
+
+                if (lastTime < 0) {
+                    lastTime = now; // first call: nothing to compare against yet.
+                    return;
+                }
+
+                System.out.println(currentTick);
+
+                long elapsed = now - lastTime;
+                lastTime = now;
+                accumulator += elapsed;
+
+
+                // Guard against a huge elapsed value after, for example, a debugger pause or the window losing focus.
+                // without this, a single stall could queue up hundreds of ticks that all ifre back-to-back trying to
+                // "catch up", which is its own kind of stutter.
+                if (accumulator > NS_PER_TICK * 5) {
+                    accumulator = NS_PER_TICK * 5;
+                }
+
+                while (accumulator >= NS_PER_TICK) {
+                    tick();
+                    currentTick++;
+                    accumulator -= NS_PER_TICK;
                 }
 
 
-
-
+                // Note: always render the background grid FIRST before rendering the foreground grid
                 bgGrid.render();
                 fgGrid.render();
             }
         }.start();
 
 
+    }
 
+    public void tick() {
+        // prove the loop runs every frame: an animated @ bouncing on row 12
+        int x = 2 + (currentTick) % 70;
+        fgGrid.setGlyph(x, 12,'@', Color.YELLOW);
+        bgGrid.setBackground(x, 12, Color.RED);
+        if (x > 2) {
+            fgGrid.setGlyph(x - 1, 12, ' ', Color.WHITE);
+            bgGrid.setBackground(x - 1, 12, Color.BLACK);
+        }
     }
 
     public void drawBorder(Color borderFgColor) {
