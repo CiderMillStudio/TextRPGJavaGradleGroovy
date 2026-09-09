@@ -16,4 +16,14 @@ public class Vector {
     public int getY() {
         return y;
     }
+
+    public boolean equals(Vector vector) {
+        if (this.x == vector.x) {
+            if (this.y == vector.y) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

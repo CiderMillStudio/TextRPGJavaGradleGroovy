@@ -1,5 +1,6 @@
 package net.wady;
 
+import de.articdive.jnoise.generators.noisegen.perlin.PerlinNoiseGenerator;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,52 +12,66 @@ import javafx.scene.paint.Color;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import net.wady.gameobjects.GameObjectManager;
 import net.wady.rendering.BackgroundGrid;
+import net.wady.rendering.Camera;
 import net.wady.rendering.TerminalGrid;
+import net.wady.rendering.WorldPresenter;
+import net.wady.worldgeneration.NoiseGenerator;
+import net.wady.worldgeneration.NoiseImageSaver;
+import net.wady.worldmanagement.ChunkGenerator;
+import net.wady.worldmanagement.ChunkedWorldMap;
+import net.wady.worldmanagement.World;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class Main extends Application {
-    private static final int COLS = 90;
-    private static final int ROWS = 55;
+    private static final int COLS = 80;
+    private static final int ROWS = 50;
     private static final int SCALE = 3; // must be an integer (2 -> 16x16 pixel cells)
     private static final int maxFPS = 40; // 20 frames per second (max)
 
     private BackgroundGrid bgGrid;
     private TerminalGrid fgGrid;
-    private int currentTick = 0;
+    private long currentTick = 0;
 
     private static final long NS_PER_TICK = 1_000_000_000L / maxFPS;
     private long lastTime = -1;
     private long accumulator = 0;
 
+    // NEED TO MAKE THIS PRETTIER, this is just for testing purposes:
+    private long testLong = 0l;
+    private final World world = new World(new ChunkedWorldMap(new ChunkGenerator(testLong)), new GameObjectManager());
+    private final Camera camera = new Camera();
+    private final WorldPresenter worldPresenter = new WorldPresenter(camera);
+
 
     @Override
     public void start(Stage stage) throws Exception {
-        Canvas fgCanvas = new Canvas(COLS * 8 * SCALE, ROWS * 8 * SCALE);
         Canvas bgCanvas = new Canvas(COLS * 8 * SCALE, ROWS * 8 * SCALE);
+        Canvas fgCanvas = new Canvas(COLS * 8 * SCALE, ROWS * 8 * SCALE);
 
-        GraphicsContext gc = fgCanvas.getGraphicsContext2D();
+        GraphicsContext bgGraphicsContext = bgCanvas.getGraphicsContext2D();
+        GraphicsContext fgGraphicContext = fgCanvas.getGraphicsContext2D();
 
-        bgGrid = new BackgroundGrid(bgCanvas.getGraphicsContext2D(), COLS, ROWS, SCALE);
-        fgGrid = new TerminalGrid(loadAtlas(), gc, COLS, ROWS, SCALE);
+        bgGrid = new BackgroundGrid(bgGraphicsContext, COLS, ROWS, SCALE);
+        fgGrid = new TerminalGrid(loadAtlas(), fgGraphicContext, COLS, ROWS, SCALE);
         fgGrid.clear(Color.BLACK);
 
-        drawBorder(Color.GRAY);
+        /*drawBorder(Color.GRAY);
         drawText(2, 2, "ANSI ROGUELIKE - Bm437 Acer VGA 8x8", Color.web("#55FF55"));
         drawText(2, 4, "Extracted straight from the EBDT bitmap strikes", Color.web("#AAAAAA"));
         drawText(2, 6, "Box drawing: \u2554\u2550\u2550\u2557 \u2551  \u2551 \u255A\u2550\u2550\u255D", Color.web("#5555FF"));
         drawText(2, 8, "Card suits: \u2660 \u2665 \u2666 \u2663", Color.web("#FF5555"));
-        drawText(2, 10, "House symbol: \u2302", Color.SEAGREEN);
+        drawText(2, 10, "House symbol: \u2302", Color.SEAGREEN);*/
 
         StackPane root = new StackPane(bgCanvas, fgCanvas);
         Scene scene = new Scene(root, Color.BLACK);
         stage.setScene(scene);
-        stage.setTitle("TerminalGrid demo");
+        stage.setTitle("Roguelike Prototype");
         stage.setResizable(false);
         stage.show();
-
 
 
         new AnimationTimer() {
@@ -83,7 +98,7 @@ public class Main extends Application {
                 }
 
                 while (accumulator >= NS_PER_TICK) {
-                    tick();
+                    tick(elapsed);
                     currentTick++;
                     accumulator -= NS_PER_TICK;
                 }
@@ -98,15 +113,11 @@ public class Main extends Application {
 
     }
 
-    public void tick() {
-        // prove the loop runs every frame: an animated @ bouncing on row 12
-        int x = 2 + (currentTick) % 70;
-        fgGrid.setGlyph(x, 12,'@', Color.YELLOW);
-        bgGrid.setBackground(x, 12, Color.RED);
-        if (x > 2) {
-            fgGrid.setGlyph(x - 1, 12, ' ', Color.WHITE);
-            bgGrid.setBackground(x - 1, 12, Color.BLACK);
-        }
+    public void tick(long deltaTime) {
+
+        world.worldTick(deltaTime);
+        worldPresenter.sync(world, fgGrid, bgGrid, ROWS, COLS);
+
     }
 
     public void drawBorder(Color borderFgColor) {
@@ -140,83 +151,13 @@ public class Main extends Application {
 
     public static void main(String[] args) throws IOException {
 
-        launch(args); // an inherited class from Application (JavaFX)
-
-        // Open Start Menu
-        /*
-         *
-         * Open the game's start screen (Published by: x, CiderMillStudio)
-         * Open the start menu, play starting music
-         * Show Title Screen, allowing player to choose from one of 4 save files.
-         * Save files should either be empty (showing "Start New Game"), or should input the save file info (Character Name, time spent playing, player location, etc...)
-         * Upon selection, the selected gamefile should be initialized.
-         *
-         *
-         * */
+        //launch(args); // an inherited class from Application (JavaFX)
+        NoiseGenerator noise = new NoiseGenerator(333329614l, 4, 0.25, 0.5f, 1f);
 
 
+        NoiseImageSaver noiseImageSaver = new NoiseImageSaver();
 
-        // Initialize game
-        /*
-         * - Collect file data to figure out what exactly needs to be loaded into the game via the game_init_data.json
-         * - If new world, procedurally generate set of DUNGEONS, each with between 1-20 floors. (BSP Trees)
-         * - If new world, procedurally generate an overworld. (Drunkards Walk)
-         *
-         * */
-
-       /* ObjectMapper mapper = new ObjectMapper();
-        GameData gameData = new GameData();
-
-
-        try (InputStream is = Main.class.getResourceAsStream("/game_init_data.json")) {
-            if (is == null) {
-                throw new FileNotFoundException("game_init_data.json not found on classpath '/'");
-            }
-            gameData = mapper.readValue(is, GameData.class);
-        }
-
-
-        String json = mapper.writeValueAsString(gameData);
-
-        System.out.println("loading gamedata from the following json fields: \n" + json);
-
-
-        // --- GAME LOOP ------
-
-        GameLoop gameLoop = new GameLoop();
-
-        // Starts the loop -- this call returns almost immediately, since
-        // scheduleAtFixedRate() runs on its own background thread.
-        gameLoop.start();
-
-        try {
-            gameLoop.awaitCompletion();
-        } catch (InterruptedException e) {
-            // If something interrupts main() itself while waiting,
-            // restore the interrupt flag and bail out gracefully.
-            Thread.currentThread().interrupt();
-            System.err.println("Game loop was interrupted before completion.");
-        }
-
-        // --- Execution only reaches this point after the loop has truly ended ---
-
-
-
-        *//* Terminate Game
-         *
-         * Decide whether or not to save game
-         * If yes, save game and exit the game
-         *
-         * *//*
-
-        File saveFile = new File(System.getProperty("user.dir"), ".textrpg/gamedata.json");
-        saveFile.getParentFile().mkdirs();
-
-        mapper.writerWithDefaultPrettyPrinter().writeValue(saveFile, gameData);
-
-        json = mapper.writeValueAsString(gameData);
-        System.out.println("saving gamedata to JSON with following info: \n" + json);*/
-
+        noiseImageSaver.savePixelatedNoise(noise.getJNoise(), "pixelated_noise3.png", 768, 768, 8);
 
 
     }

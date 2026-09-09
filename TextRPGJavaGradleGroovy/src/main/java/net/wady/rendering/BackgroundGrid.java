@@ -34,6 +34,11 @@ public class BackgroundGrid {
         if (col < 0 || col >= cols || row < 0 || row >= rows) return;
 
         int i = row * cols + col;
+
+        if (bg[i].equals(color)) {
+            return;
+        }
+
         bg[i] = color;
         dirty[i] = true;
     }

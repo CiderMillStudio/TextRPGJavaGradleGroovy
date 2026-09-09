@@ -1,19 +1,18 @@
 package net.wady.gameobjects;
 
 import net.wady.physics.Vector;
-import net.wady.rendering.PixelChar;
-import net.wady.rendering.PixelColor;
-import net.wady.rendering.Sprite;
+import net.wady.rendering.RenderInfo;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class GameObject {
-    private String name;
-    private Vector position;
-    private final Map<Class<? extends Component>, Component> components = new HashMap<>();
-    private boolean hasStarted = false;
+public abstract class GameObject {
+    protected String name;
+    protected Vector position;
+    protected final Map<Class<? extends Component>, Component> components = new HashMap<>();
+    protected boolean hasStarted = false;
+    protected RenderInfo render;
 
     public GameObject() {
         this.name = "GameObject_unnamed";
@@ -97,5 +96,7 @@ public class GameObject {
     public Vector getPosition(){
         return position;
     }
+
+    public RenderInfo getRenderInfo() {return render; }
 
 }

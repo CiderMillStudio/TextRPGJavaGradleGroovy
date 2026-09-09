@@ -146,6 +146,11 @@ public class TerminalGrid {
         Integer idx = CP437_INDEX.get(c);
         int cp437Index = (idx != null) ? idx : 0x3F; // fall back to '?' if not in CP437
         int i = row * cols + col;
+
+        if (glyphIndex[i] == cp437Index && fg[i].equals(foregroundColor)) {
+            return;
+        }
+
         glyphIndex[i] = cp437Index;
         fg[i] = foregroundColor;
         dirty[i] = true;

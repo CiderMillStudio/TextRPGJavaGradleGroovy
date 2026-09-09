@@ -1,10 +1,6 @@
 package net.wady.gameengine;
 
 
-import net.wady.rendering.FrameOutput;
-import net.wady.rendering.PixelChar;
-import net.wady.rendering.PixelColor;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -52,7 +48,7 @@ public class GameLoop {
 
     // The heartbeat of the game. Runs once per tick, every 250ms.
     private void tick() {
-        try {
+        /*try {
             if (!running) return;
 
             // REAL GAME LOOP LOGIC GOES HERE
@@ -139,6 +135,8 @@ public class GameLoop {
         }
 
         return pixels;
+        }
+         */
 
     }
 
