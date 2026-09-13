@@ -1,8 +1,8 @@
 package net.wady.rendering;
 
+
 public class Camera {
     private int worldX, worldY; // top-left of viewport, in tile/grid coordinates
-
 
     public void moveTo(int x, int y) {
         this.worldX = x;

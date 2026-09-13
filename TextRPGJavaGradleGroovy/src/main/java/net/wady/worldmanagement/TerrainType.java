@@ -1,7 +1,7 @@
 package net.wady.worldmanagement;
 
 public enum TerrainType {
-    FLOOR           (true, 1, false, '.', /*fg*/ 0x7FFFFFFF, /*bg*/ 0x00000000),
+    FLOOR           (true, 1, false, '.', /*fg*/ 0xFF909090, /*bg*/ 0x00000000),
     WALL            (false, 0, true, '#', 0xFFFFFFFF, 0x00000000),
     WATER_SHALLOW   (true, 2, false, '~', 0xFF90D6FF, 0x00000000),
     WATER_DEEP      (false, 0, false, '\u2248', 0xFF111184, 0x00000000),

@@ -14,15 +14,6 @@ public abstract class GameObject {
     protected boolean hasStarted = false;
     protected RenderInfo render;
 
-    public GameObject() {
-        this.name = "GameObject_unnamed";
-        this.position = new Vector(0,0);
-    }
-
-    public GameObject(String name, Vector position) {
-        this.name = name;
-        this.position = position;
-    }
 
     // All Components (Sprite, Collider, etc...) implement the Component Interface, which allows us to create a system
     // based off of the Component Pattern (which relies on java.util.Optional, and a hashmap called 'components') to
@@ -79,7 +70,7 @@ public abstract class GameObject {
         }
     }
 
-    public final void update(double deltaTime) {
+    public final void update(long deltaTime) {
         onUpdate(deltaTime);
         for (Component c : components.values()) {
             c.onUpdate(this, deltaTime);

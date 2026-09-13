@@ -1,9 +1,9 @@
 package net.wady;
 
-import de.articdive.jnoise.generators.noisegen.perlin.PerlinNoiseGenerator;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -12,37 +12,41 @@ import javafx.scene.paint.Color;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import net.wady.gameobjects.GameObjectManager;
+import net.wady.gameengine.KeyInputListener;
+import net.wady.player.Player;
 import net.wady.rendering.BackgroundGrid;
 import net.wady.rendering.Camera;
 import net.wady.rendering.TerminalGrid;
 import net.wady.rendering.WorldPresenter;
 import net.wady.worldgeneration.NoiseGenerator;
 import net.wady.worldgeneration.NoiseImageSaver;
-import net.wady.worldmanagement.ChunkGenerator;
-import net.wady.worldmanagement.ChunkedWorldMap;
 import net.wady.worldmanagement.World;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class Main extends Application {
-    private static final int COLS = 80;
-    private static final int ROWS = 50;
+    private static final int COLS = 60;
+    private static final int ROWS = 35;
     private static final int SCALE = 3; // must be an integer (2 -> 16x16 pixel cells)
-    private static final int maxFPS = 40; // 20 frames per second (max)
+    private static final int TICKS_PER_SECOND = 20; // 20 frames per second (max)
+
+    // store currently held-down keys:
+    // private final KeyInputListener keyInputListener = new KeyInputListener();
 
     private BackgroundGrid bgGrid;
     private TerminalGrid fgGrid;
     private long currentTick = 0;
 
-    private static final long NS_PER_TICK = 1_000_000_000L / maxFPS;
+    private static final long NS_PER_TICK = 1_000_000_000L / TICKS_PER_SECOND;
     private long lastTime = -1;
     private long accumulator = 0;
 
+
     // NEED TO MAKE THIS PRETTIER, this is just for testing purposes:
+    // private Player player = new Player();
     private long testLong = 0l;
-    private final World world = new World(new ChunkedWorldMap(new ChunkGenerator(testLong)), new GameObjectManager());
+    private final World world = new World(testLong);
     private final Camera camera = new Camera();
     private final WorldPresenter worldPresenter = new WorldPresenter(camera);
 
@@ -68,12 +72,21 @@ public class Main extends Application {
 
         StackPane root = new StackPane(bgCanvas, fgCanvas);
         Scene scene = new Scene(root, Color.BLACK);
+
+        // listen for key events
+        scene.setOnKeyPressed(e -> KeyInputListener.getInstance().keyPressed(e.getCode()));
+        scene.setOnKeyReleased(e -> KeyInputListener.getInstance().keyReleased(e.getCode()));
+
+        world.SpawnPlayer();
+
         stage.setScene(scene);
         stage.setTitle("Roguelike Prototype");
         stage.setResizable(false);
         stage.show();
 
 
+
+        // The ANimationTimer is JavaFX's way of updating the screen
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -83,7 +96,7 @@ public class Main extends Application {
                     return;
                 }
 
-                System.out.println(currentTick);
+                // System.out.println(currentTick);
 
                 long elapsed = now - lastTime;
                 lastTime = now;
@@ -92,13 +105,13 @@ public class Main extends Application {
 
                 // Guard against a huge elapsed value after, for example, a debugger pause or the window losing focus.
                 // without this, a single stall could queue up hundreds of ticks that all ifre back-to-back trying to
-                // "catch up", which is its own kind of stutter.
+                // "catch up" / stutter.
                 if (accumulator > NS_PER_TICK * 5) {
                     accumulator = NS_PER_TICK * 5;
                 }
 
-                while (accumulator >= NS_PER_TICK) {
-                    tick(elapsed);
+                while (accumulator >= NS_PER_TICK /*currently going at 20 ticks per second*/) {
+                    tick(NS_PER_TICK); // note that number of NANO-seconds are being passed to tick as deltaTime.
                     currentTick++;
                     accumulator -= NS_PER_TICK;
                 }
@@ -117,6 +130,7 @@ public class Main extends Application {
 
         world.worldTick(deltaTime);
         worldPresenter.sync(world, fgGrid, bgGrid, ROWS, COLS);
+        drawBorder(Color.GRAY);
 
     }
 
@@ -151,13 +165,13 @@ public class Main extends Application {
 
     public static void main(String[] args) throws IOException {
 
-        //launch(args); // an inherited class from Application (JavaFX)
+        launch(args); // an inherited class from Application (JavaFX)
         NoiseGenerator noise = new NoiseGenerator(333329614l, 4, 0.25, 0.5f, 1f);
 
 
         NoiseImageSaver noiseImageSaver = new NoiseImageSaver();
 
-        noiseImageSaver.savePixelatedNoise(noise.getJNoise(), "pixelated_noise3.png", 768, 768, 8);
+        noiseImageSaver.savePixelatedNoise(noise.getJNoise(), "pixelated_noise4.png", 32, 32, 2);
 
 
     }

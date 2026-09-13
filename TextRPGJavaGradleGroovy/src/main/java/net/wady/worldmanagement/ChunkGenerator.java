@@ -8,6 +8,7 @@ public class ChunkGenerator {
     }
 
     Chunk generate(ChunkCoord coord) {
+
         return new Chunk();
     }
 

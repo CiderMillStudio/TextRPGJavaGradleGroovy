@@ -20,6 +20,7 @@ public class GameObjectManager {
         // and then we call the necessary START methods for ALL pending game objects
         for (GameObject gameObject : pending) {
             gameObject.start();
+            System.out.println(gameObject.name + " spawned at " + gameObject.position.getX() + ", " + gameObject.position.getY());
         }
         // then we add all pending GO's to the gameObject's list for our scene and CLEAR the pending list of GO's
         gameObjects.addAll(pending);
@@ -29,6 +30,8 @@ public class GameObjectManager {
         // UPDATE methods :)
         for (GameObject gameObject : gameObjects) {
             gameObject.update(deltaTime);
+            System.out.println(gameObject.name + " updated at " + gameObject.position.getX() + ", " + gameObject.position.getY());
+
         }
     }
 

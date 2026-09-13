@@ -22,8 +22,9 @@ public class Vector {
             if (this.y == vector.y) {
                 return true;
             }
+            else return false;
         }
+        else return false;
 
-        return false;
     }
 }
