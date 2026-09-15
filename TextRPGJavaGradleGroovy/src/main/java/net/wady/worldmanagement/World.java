@@ -12,7 +12,7 @@ public class World {
     public World(long worldSeed) {
 
         this.chunkedWorldMap = new ChunkedWorldMap(worldSeed);
-        //player.addMoveListener(chunkedWorldMap);
+        player.addMoveListener(chunkedWorldMap);
     }
 
 

@@ -8,8 +8,8 @@ public class ChunkGenerator {
     }
 
     Chunk generate(ChunkCoord coord) {
-
-        return new Chunk();
+        System.out.println(this.toString() + ": generating new chunk: " + coord.toString());
+        return new Chunk(coord);
     }
 
 

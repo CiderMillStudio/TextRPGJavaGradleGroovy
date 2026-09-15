@@ -3,7 +3,6 @@ package net.wady;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -13,7 +12,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import net.wady.gameengine.KeyInputListener;
-import net.wady.player.Player;
 import net.wady.rendering.BackgroundGrid;
 import net.wady.rendering.Camera;
 import net.wady.rendering.TerminalGrid;

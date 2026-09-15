@@ -29,7 +29,7 @@ public class WorldPresenter {
 
         for (GameObject go : world.getGameObjectManager().getGameObjects()) {
             RenderInfo r = go.getRenderInfo();
-            fg.setGlyph(go.getPosition().getX(), go.getPosition().getY(), r.glyph(), Color.rgb(r.fgR(), r.fgB(), r.fgG(), 1));
+            fg.setGlyph(go.getPosition().x(), go.getPosition().y(), r.glyph(), Color.rgb(r.fgR(), r.fgB(), r.fgG(), 1));
         }
 
     }

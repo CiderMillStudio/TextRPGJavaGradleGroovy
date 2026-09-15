@@ -6,8 +6,6 @@ import net.wady.gameobjects.Component;
 import net.wady.gameobjects.GameObject;
 import net.wady.physics.Vector;
 
-import java.security.Key;
-
 public class PlayerController implements Component {
 
     private final int SLOW_MOVES_PER_SECOND = 2;
@@ -88,7 +86,7 @@ public class PlayerController implements Component {
 
 
 
-        MoveController(owner, keyListener, keyListener.getLastKeyPressed(), newMoveDir.getX(), newMoveDir.getY());
+        MoveController(owner, keyListener, keyListener.getLastKeyPressed(), newMoveDir.x(), newMoveDir.y());
 
     }
 
@@ -96,7 +94,7 @@ public class PlayerController implements Component {
 
         Vector newMoveDir = new Vector(xDir, yDir);
 
-        ((Player) owner).move(new Vector(newMoveDir.getX(), -1 * newMoveDir.getY())); // -1 * yDir because for some reason, top-left cell is (0,0), and y increases as you go DOWN.
+        ((Player) owner).move(new Vector(newMoveDir.x(), -1 * newMoveDir.y())); // -1 * yDir because for some reason, top-left cell is (0,0), and y increases as you go DOWN.
 
         latestMoveDir = newMoveDir;
         timeSinceLastMove = 0;

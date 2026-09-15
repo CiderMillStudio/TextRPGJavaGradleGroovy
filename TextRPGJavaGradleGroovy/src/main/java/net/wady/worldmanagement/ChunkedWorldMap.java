@@ -1,12 +1,15 @@
 package net.wady.worldmanagement;
 
+import net.wady.player.playerevents.PlayerMoveEvent;
+import net.wady.player.playerevents.PlayerMoveListener;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChunkedWorldMap /*implements PlayerMoveListener */{
+public class ChunkedWorldMap implements PlayerMoveListener {
 
-    private static final int CHUNK_LOAD_RADIUS = 3;
-    private static final int CHUNK_UNLOAD_RADIUS = 7;
+    private static final int CHUNK_LOAD_RADIUS = 2;
+    private static final int CHUNK_UNLOAD_RADIUS = 5;
 
     private final Map<ChunkCoord, Chunk> loaded = new HashMap<>();
     private final ChunkGenerator generator;
@@ -27,20 +30,36 @@ public class ChunkedWorldMap /*implements PlayerMoveListener */{
         return chunk.tileAt(localX, localY);
     }
 
+    @Override
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (event.hasChangedChunk() == false) return;
+
+        //else:
+        this.playerChunk = event.getNewChunk();
+        loadChunksAroundPlayer();
+        unloadDistantChunks();
+
+    }
+
 
     // need to implement below code later:
 
-/*    private void loadChunksAroundPlayer() {
+    private void loadChunksAroundPlayer() {
         for (int dx = -CHUNK_LOAD_RADIUS; dx <= CHUNK_LOAD_RADIUS; dx++ ) {
             for (int dy = -CHUNK_LOAD_RADIUS; dy <= CHUNK_LOAD_RADIUS; dy++) {
-                ChunkCoord coord = new ChunkCoord(playerChunk.getChunkX() + dx, playerChunk.getChunkY() + dy);
-                loaded.computeIfAbsent(coord, generator::generate);
+                ChunkCoord coord = new ChunkCoord(playerChunk.chunkX() + dx, playerChunk.chunkY() + dy);
+                if (playerChunk.getChunkDistanceTaxicab(coord) <= CHUNK_LOAD_RADIUS)
+                {
+                    loaded.computeIfAbsent(coord, generator::generate);
+                }
             }
         }
     }
 
     private void unloadDistantChunks() {
         // CONSIDER SAVING CHUNK DATA TO DISK BEFORE UNLOADING, ONCE WE WANT PERMANENCE.
+
         loaded.keySet().removeIf(coord -> coord.getChunkDistanceTaxicab(playerChunk) > CHUNK_UNLOAD_RADIUS);
-    }*/
+        System.out.println(this.toString() + ": Number of remaining loaded chunks: \n " + loaded.keySet().size());
+    }
 }

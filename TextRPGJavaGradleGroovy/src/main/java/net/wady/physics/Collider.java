@@ -2,9 +2,7 @@ package net.wady.physics;
 
 import net.wady.gameobjects.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Collider implements Component {
 
@@ -64,7 +62,7 @@ public class Collider implements Component {
 
         public Collider build() {
             if (collidabilityMatrix == null) {
-                collidabilityMatrix = new boolean[size.getX() * size.getY()];
+                collidabilityMatrix = new boolean[size.x() * size.y()];
                 Arrays.fill(collidabilityMatrix, true);
             }
             return new Collider(this);

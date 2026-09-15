@@ -8,8 +8,8 @@ public record ChunkCoord(int chunkX, int chunkY) {
 
 
     public ChunkCoord(Vector worldPosition) {
-        int worldX = worldPosition.getX();
-        int worldY = worldPosition.getY();
+        int worldX = worldPosition.x();
+        int worldY = worldPosition.y();
 
         int x = Math.floorDiv(worldX, Chunk.SIZE);
         int y = Math.floorDiv(worldY, Chunk.SIZE);
