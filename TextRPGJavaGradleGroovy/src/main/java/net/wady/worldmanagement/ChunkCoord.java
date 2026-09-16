@@ -14,8 +14,7 @@ public record ChunkCoord(int chunkX, int chunkY) {
         int x = Math.floorDiv(worldX, Chunk.SIZE);
         int y = Math.floorDiv(worldY, Chunk.SIZE);
 
-        System.out.println("At World Position (" + worldX + ", " + worldY + ")," +
-                "\nChunkCoord is (" + x + ", " + y + ").");
+        // System.out.println("CHUNKCOORD: At World Position (" + worldX + ", " + worldY + ")," + "\nChunkCoord is (" + x + ", " + y + ").");
 
         this(x, y);
     }

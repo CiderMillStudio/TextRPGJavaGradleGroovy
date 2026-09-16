@@ -29,10 +29,10 @@ public class Camera implements PlayerMoveListener {
         topCameraBordersWorldY = worldY;
         bottomCameraBordersWorldY = worldY + ROWS - 1;
 
-        System.out.println("CAMERA's BORDERS: \nRIGHTX: " + rightCameraBordersWorldX +
+       /* System.out.println("CAMERA's BORDERS: \nRIGHTX: " + rightCameraBordersWorldX +
                 "\nLEFTX: " + leftCameraBordersWorldX +
                 "\nTOPY: " + topCameraBordersWorldY +
-                "\nBOTTOMY: " + bottomCameraBordersWorldY);
+                "\nBOTTOMY: " + bottomCameraBordersWorldY);*/
     }
 
     public void moveCameraToWorldPosition(int worldX, int worldY) {
@@ -106,7 +106,7 @@ public class Camera implements PlayerMoveListener {
 
     @Override
     public void onPlayerMove(PlayerMoveEvent event) {
-        System.out.println("CAMERA IS LISTENING!");
+        //System.out.println("CAMERA IS LISTENING!");
 
         int newWorldX = event.getNewPosition().x();
         int newWorldY = event.getNewPosition().y();
@@ -127,34 +127,8 @@ public class Camera implements PlayerMoveListener {
             moveCameraToWorldY(newWorldY - (ROWS - 1));
         }
 
-        /*if (event.getNewPosition().x() % COLS == 0 && event.getMoveDirection().x() != 0) {
-            if (event.getMoveDirection().x() > 0) { // if we're moving a screen RIGHT, just move the camera's LEFT boundary to the new X position
-                moveToWorldX(event.getNewPosition().x());
-            }
-            else if (event.getMoveDirection().x() < 0) { // if we're moving a screen LEFT, move the camera's LEFT boundary to the new X position - COLS
-                moveToWorldX(event.getNewPosition().x() - COLS);
-            }
-        }
 
-        if (event.getNewPosition().y() % ROWS == 0 && event.getMoveDirection().y() != 0) {
-            if (event.getMoveDirection().y() > 0) { // if we're moving a screen DOWN, just move the camera's TOP boundary to the new Y position
-                moveToWorldX(event.getNewPosition().y());
-            }
-            else if (event.getMoveDirection().y() < 0) { // if we're moving a screen UP, move the camera's TOP boundary to the new Y position - ROWS
-                moveToWorldX(event.getNewPosition().y() - ROWS);
-            }
-        }
-
-        if (event.getNewPosition().y() % ROWS == (ROWS-1) && event.getMoveDirection().y() != 0) {
-            *//*if (event.getMoveDirection().y() > 0) { // if we're moving a screen DOWN, just move the camera's TOP boundary to the new Y position
-                moveToWorldX(event.getNewPosition().y());
-            }
-            else*//* if (event.getMoveDirection().y() < 0) { // if we're moving a screen UP, move the camera's TOP boundary to the new Y position - (ROWS - 1)
-                moveToWorldX(event.getNewPosition().y() - (ROWS-1));
-            }
-        }*/
-
-        System.out.println("CAMERA'S NEW POSITION IS: " + this.worldX + ", " + this.worldY);
+        //System.out.println("CAMERA'S NEW POSITION IS: " + this.worldX + ", " + this.worldY);
 
 
     }

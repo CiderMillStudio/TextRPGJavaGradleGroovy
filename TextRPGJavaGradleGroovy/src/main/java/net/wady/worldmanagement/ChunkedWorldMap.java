@@ -36,6 +36,7 @@ public class ChunkedWorldMap implements PlayerMoveListener {
 
         //else:
         this.playerChunk = event.getNewChunk();
+        System.out.println("playerChunk updated to " + event.getNewChunk().toString());
         loadChunksAroundPlayer();
         unloadDistantChunks();
 
@@ -59,6 +60,6 @@ public class ChunkedWorldMap implements PlayerMoveListener {
         // CONSIDER SAVING CHUNK DATA TO DISK BEFORE UNLOADING, ONCE WE WANT PERMANENCE.
 
         loaded.keySet().removeIf(coord -> coord.getChunkDistanceTaxicab(playerChunk) > CHUNK_UNLOAD_RADIUS);
-        System.out.println(this.toString() + ": Number of remaining loaded chunks: \n " + loaded.keySet().size());
+        // System.out.println(this.toString() + ": Number of remaining loaded chunks: \n " + loaded.keySet().size());
     }
 }

@@ -8,7 +8,7 @@ public class ChunkGenerator {
     }
 
     Chunk generate(ChunkCoord coord) {
-        System.out.println(this.toString() + ": generating new chunk: " + coord.toString());
+        // System.out.println(this.toString() + ": generating new chunk: " + coord.toString());
         return new Chunk(coord);
     }
 

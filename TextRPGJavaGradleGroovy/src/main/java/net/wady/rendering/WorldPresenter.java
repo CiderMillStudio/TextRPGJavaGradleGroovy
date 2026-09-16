@@ -33,9 +33,6 @@ public class WorldPresenter {
             Vector screenPosition = camera.convertWorldPositionToScreenPosition(go.getPosition());
             fg.setGlyph(screenPosition.x(), screenPosition.y(), r.glyph(), Color.rgb(r.fgR(), r.fgB(), r.fgG(), 1));
 
-            //fg.setGlyph(go.getPosition().x(), go.getPosition().y(), r.glyph(), Color.rgb(r.fgR(), r.fgB(), r.fgG(), 1));
-
-            //System.out.println("WORLDPRESENTER: GameObject " + go.getName() + " at: " + camera.convertWorldPositionToScreenPosition(go.getPosition()).toString());
         }
 
     }

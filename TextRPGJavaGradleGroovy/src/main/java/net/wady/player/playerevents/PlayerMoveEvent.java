@@ -17,12 +17,12 @@ public class PlayerMoveEvent {
         this.newChunk = newChunk;
         this.moveDirection = new Vector (newPosition.x() - oldPosition.x(), newPosition.y() - oldPosition.y());
 
-        if (hasChangedChunk()) {
+        /*if (hasChangedChunk()) {
             System.out.printf(this.toString() + ": playerChunk is now: " + newChunk.chunkX() + ", " + newChunk.chunkY());
-        }
+        }*/
 
         if (hasChangedPosition(oldPosition, newPosition)) {
-            System.out.println(this.toString() + ":  playerPosition = " + newPosition.x() + ", " + newPosition.y());
+            System.out.println("PlayerMoveEvent:  playerPosition = " + newPosition.x() + ", " + newPosition.y());
         }
 
     }

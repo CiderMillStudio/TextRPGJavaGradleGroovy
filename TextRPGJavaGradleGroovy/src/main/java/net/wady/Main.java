@@ -27,7 +27,7 @@ public class Main extends Application {
     private static final int COLS = 60;
     private static final int ROWS = 35;
     private static final int SCALE = 3; // must be an integer (2 -> 16x16 pixel cells)
-    private static final int TICKS_PER_SECOND = 20; // 20 frames per second (max)
+    private static final int TICKS_PER_SECOND = 40; // 40 frames per second (max)
 
     // store currently held-down keys:
     // private final KeyInputListener keyInputListener = new KeyInputListener();
@@ -154,7 +154,7 @@ public class Main extends Application {
     private void drawText(int col, int row, String s, Color color) {
         for (int i = 0; i < s.length(); i++) {
             fgGrid.setGlyph(col + i, row, s.charAt(i), color);
-            System.out.println(s.charAt(i));
+            // System.out.println(s.charAt(i));
         }
     }
 
@@ -165,12 +165,12 @@ public class Main extends Application {
     public static void main(String[] args) throws IOException {
 
         launch(args); // an inherited class from Application (JavaFX)
-        NoiseGenerator noise = new NoiseGenerator(333329614l, 4, 0.25, 0.5f, 1f);
+        NoiseGenerator noise = new NoiseGenerator(3333314l, 4, 0.7, 0.5f, 1f);
 
 
         NoiseImageSaver noiseImageSaver = new NoiseImageSaver();
 
-        noiseImageSaver.savePixelatedNoise(noise.getJNoise(), "pixelated_noise4.png", 32, 32, 2);
+        noiseImageSaver.savePixelatedNoise(noise.getJNoise(), "pixelated_noise4.png", 64, 64, 1);
 
 
     }
