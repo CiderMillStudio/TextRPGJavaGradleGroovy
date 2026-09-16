@@ -45,7 +45,7 @@ public class Main extends Application {
     // private Player player = new Player();
     private long testLong = 0l;
     private final World world = new World(testLong);
-    private final Camera camera = new Camera();
+    private final Camera camera = new Camera(ROWS, COLS);
     private final WorldPresenter worldPresenter = new WorldPresenter(camera);
 
 
@@ -76,6 +76,7 @@ public class Main extends Application {
         scene.setOnKeyReleased(e -> KeyInputListener.getInstance().keyReleased(e.getCode()));
 
         world.SpawnPlayer();
+        world.player.addMoveListener(worldPresenter.camera);
 
         stage.setScene(scene);
         stage.setTitle("Roguelike Prototype");
@@ -128,7 +129,7 @@ public class Main extends Application {
 
         world.worldTick(deltaTime);
         worldPresenter.sync(world, fgGrid, bgGrid, ROWS, COLS);
-        drawBorder(Color.GRAY);
+        // drawBorder(Color.GRAY);
 
     }
 

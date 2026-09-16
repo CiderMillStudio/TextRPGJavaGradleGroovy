@@ -2,6 +2,7 @@ package net.wady.rendering;
 
 import javafx.scene.paint.Color;
 import net.wady.gameobjects.GameObject;
+import net.wady.physics.Vector;
 import net.wady.worldmanagement.Tile;
 import net.wady.worldmanagement.World;
 
@@ -10,7 +11,7 @@ import net.wady.worldmanagement.World;
 
 public class WorldPresenter {
 
-    private final Camera camera;
+    public final Camera camera;
 
     public WorldPresenter(Camera camera) {
 
@@ -29,7 +30,12 @@ public class WorldPresenter {
 
         for (GameObject go : world.getGameObjectManager().getGameObjects()) {
             RenderInfo r = go.getRenderInfo();
-            fg.setGlyph(go.getPosition().x(), go.getPosition().y(), r.glyph(), Color.rgb(r.fgR(), r.fgB(), r.fgG(), 1));
+            Vector screenPosition = camera.convertWorldPositionToScreenPosition(go.getPosition());
+            fg.setGlyph(screenPosition.x(), screenPosition.y(), r.glyph(), Color.rgb(r.fgR(), r.fgB(), r.fgG(), 1));
+
+            //fg.setGlyph(go.getPosition().x(), go.getPosition().y(), r.glyph(), Color.rgb(r.fgR(), r.fgB(), r.fgG(), 1));
+
+            //System.out.println("WORLDPRESENTER: GameObject " + go.getName() + " at: " + camera.convertWorldPositionToScreenPosition(go.getPosition()).toString());
         }
 
     }

@@ -7,7 +7,7 @@ public class World {
     private final ChunkedWorldMap chunkedWorldMap;
     private final GameObjectManager gameObjectManager = new GameObjectManager();
 
-    private Player player = new Player();
+    public Player player = new Player();
 
     public World(long worldSeed) {
 
@@ -33,4 +33,5 @@ public class World {
     public GameObjectManager getGameObjectManager() {
         return gameObjectManager;
     }
+    public ChunkedWorldMap getChunkedWorldMap() { return chunkedWorldMap; }
 }

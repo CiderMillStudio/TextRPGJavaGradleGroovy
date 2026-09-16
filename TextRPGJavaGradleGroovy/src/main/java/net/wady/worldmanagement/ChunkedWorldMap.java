@@ -48,8 +48,7 @@ public class ChunkedWorldMap implements PlayerMoveListener {
         for (int dx = -CHUNK_LOAD_RADIUS; dx <= CHUNK_LOAD_RADIUS; dx++ ) {
             for (int dy = -CHUNK_LOAD_RADIUS; dy <= CHUNK_LOAD_RADIUS; dy++) {
                 ChunkCoord coord = new ChunkCoord(playerChunk.chunkX() + dx, playerChunk.chunkY() + dy);
-                if (playerChunk.getChunkDistanceTaxicab(coord) <= CHUNK_LOAD_RADIUS)
-                {
+                if (playerChunk.getChunkDistanceTaxicab(coord) <= CHUNK_LOAD_RADIUS) {
                     loaded.computeIfAbsent(coord, generator::generate);
                 }
             }
