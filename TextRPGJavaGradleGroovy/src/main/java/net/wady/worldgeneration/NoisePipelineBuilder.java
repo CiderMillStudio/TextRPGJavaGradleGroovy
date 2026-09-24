@@ -1,9 +1,12 @@
 package net.wady.worldgeneration;
 
 import de.articdive.jnoise.core.api.functions.Interpolation;
+import de.articdive.jnoise.generators.noisegen.opensimplex.SuperSimplexNoiseGenerator;
 import de.articdive.jnoise.generators.noisegen.perlin.PerlinNoiseGenerator;
+import de.articdive.jnoise.generators.noisegen.worley.WorleyNoiseGenerator;
 import de.articdive.jnoise.modules.octavation.fractal_functions.FractalFunction;
 import de.articdive.jnoise.pipeline.JNoise;
+import de.articdive.jnoise.transformers.domain_warp.DomainWarpTransformer;
 
 public class NoisePipelineBuilder {
 
@@ -14,6 +17,8 @@ public class NoisePipelineBuilder {
         perlinCosine = PerlinNoiseGenerator.newBuilder().setSeed(seed).setInterpolation(Interpolation.COSINE).build();
 
         noisePipeline = JNoise.newBuilder()
+                //.worley(WorleyNoiseGenerator.newBuilder())
+                //.addDetailedTransformer(DomainWarpTransformer.newBuilder().setNoiseSource(SuperSimplexNoiseGenerator.newBuilder().build()).build())
                 .scale(scale)
                 .octavation(perlinCosine,octaves,persistence, lacunarity, FractalFunction.FBM,false)
                 .build();

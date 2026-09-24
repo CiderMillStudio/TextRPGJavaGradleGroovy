@@ -16,6 +16,7 @@ import net.wady.rendering.BackgroundGrid;
 import net.wady.rendering.Camera;
 import net.wady.rendering.TerminalGrid;
 import net.wady.rendering.WorldPresenter;
+import net.wady.worldgeneration.Hasher;
 import net.wady.worldgeneration.NoiseGenerator;
 import net.wady.worldmanagement.World;
 
@@ -23,9 +24,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class Main extends Application {
-    private static final int COLS = 60;
-    private static final int ROWS = 35;
-    private static final int SCALE = 3; // must be an integer (2 -> 16x16 pixel cells)
+    private static final int COLS = 50;
+    private static final int ROWS = 30;
+    private static final int SCALE = 4; // must be an integer (2 -> 16x16 pixel cells)
     private static final int TICKS_PER_SECOND = 40; // 40 frames per second (max)
 
     // store currently held-down keys:
@@ -47,7 +48,7 @@ public class Main extends Application {
     // NEED TO MAKE THIS PRETTIER, this is just for testing purposes:
     // private Player player = new Player();
     private long testWorldSeed = 4320l;
-    private final World world = new World(testWorldSeed);
+    private final World world = new World(Hasher.hash(testWorldSeed));
     private final Camera camera = new Camera(ROWS, COLS);
     private final WorldPresenter worldPresenter = new WorldPresenter(camera);
 

@@ -36,7 +36,7 @@ public class ChunkedWorldMap implements PlayerMoveListener {
 
         //else:
         this.playerChunk = event.getNewChunk();
-        System.out.println("playerChunk updated to " + event.getNewChunk().toString());
+        System.out.println("CHUNKED WORLD MAP: playerChunk updated to " + event.getNewChunk().toString());
         loadChunksAroundPlayer();
         unloadDistantChunks();
 

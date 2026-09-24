@@ -19,7 +19,7 @@ public class Player extends Entity {
         // set parameters:
         this.name = "Player_GameObject";
         this.render = new RenderInfo('@', 255,0,255,0,0,0);
-        this.position = new Vector(30, 30);
+        this.position = new Vector(15, 15);
         this.playerChunk = new ChunkCoord(position);
 
         // define components

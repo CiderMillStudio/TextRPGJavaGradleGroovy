@@ -1,11 +1,17 @@
 package net.wady.worldmanagement;
 
 public enum TerrainType {
-    FLOOR           (true, 1, false, '.', /*fg*/ 0xFF909090, /*bg*/ 0x00000000),
+    /*FLOOR           (true, 1, false, '.', *//*fg*//* 0xFF909090, *//*bg*//* 0x00000000),
     WALL            (false, 0, true, '#', 0xFFFFFFFF, 0x00000000),
     WATER_SHALLOW   (true, 2, false, '~', 0xFF90D6FF, 0x00000000),
     WATER_DEEP      (false, 0, false, '\u2248', 0xFF111184, 0x00000000),
-    LAVA            (false, 0, false, '\u2248', 0xFFFF991C, 0x00000000);
+    LAVA            (false, 0, false, '\u2248', 0xFFFF991C, 0x00000000);*/
+
+    FLOOR           (true, 1, false, '\u2248', /*fg*/ 0xFF006994, /*bg*/ 0x00000000), // water
+    WALL            (false, 0, true, '.', 0xFFF2D779, 0x00000000), //beach
+    WATER_SHALLOW   (true, 2, false, '\u2660', 0xFF486B00, 0x00000000), // forest
+    WATER_DEEP      (false, 0, false, '#', 0xFF606060, 0x00000000),         // stone
+    LAVA            (false, 0, false, '\u25B2', 0xFFFFFFFF, 0x00000000);    // peak
 
     final boolean passable;
     final int moveCost;
