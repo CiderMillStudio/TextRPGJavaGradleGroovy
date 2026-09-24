@@ -1,33 +1,18 @@
 package net.wady.worldgeneration;
 
-import de.articdive.jnoise.core.api.functions.Interpolation;
-import de.articdive.jnoise.core.api.modifiers.NoiseModifier;
-import de.articdive.jnoise.generators.noisegen.perlin.PerlinNoiseGenerator;
-import de.articdive.jnoise.modules.octavation.fractal_functions.FractalFunction;
-import de.articdive.jnoise.pipeline.JNoise;
-
 public class NoiseGenerator {
 
-    private final PerlinNoiseGenerator perlinCosine;
-    private final JNoise noisePipeline;
+    public void makeTestNoise(long seed, int octaves, float scale, float persistence, float lacunarity) {
+        NoisePipelineBuilder noise = new NoisePipelineBuilder(seed, octaves, scale, persistence, lacunarity);
 
-    public NoiseGenerator(long seed, int octaves, double scale, float persistence, float lacunarity) {
-        perlinCosine = PerlinNoiseGenerator.newBuilder().setSeed(seed).setInterpolation(Interpolation.LINEAR).build();
+        NoiseImageSaver noiseImageSaver = new NoiseImageSaver();
 
-        // In most cases, one would inline the perlinCosine value into the builder chain.
-        noisePipeline = JNoise.newBuilder()
-                .scale(scale)
-                .octavation(perlinCosine,octaves,persistence, lacunarity, FractalFunction.FBM,false)
-                .build();
+        int chunkIntMultiplier = 3;
+
+        noiseImageSaver.savePixelatedNoise(noise.getJNoise(), "pixelated_noise7.png", (64 * chunkIntMultiplier), (64 * chunkIntMultiplier), 1);
+
     }
 
-    public double evaluateNoise(double x, double y){
-        return perlinCosine.evaluateNoise(x, y);
-    }
-
-    public JNoise getJNoise(){
-        return noisePipeline;
-    }
 
 
 

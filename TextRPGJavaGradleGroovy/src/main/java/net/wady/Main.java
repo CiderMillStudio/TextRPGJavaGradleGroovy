@@ -17,7 +17,6 @@ import net.wady.rendering.Camera;
 import net.wady.rendering.TerminalGrid;
 import net.wady.rendering.WorldPresenter;
 import net.wady.worldgeneration.NoiseGenerator;
-import net.wady.worldgeneration.NoiseImageSaver;
 import net.wady.worldmanagement.World;
 
 import java.io.IOException;
@@ -41,12 +40,18 @@ public class Main extends Application {
     private long accumulator = 0;
 
 
+    // World Generation
+    // private final NoiseGenerator noiseGenerator = new NoiseGenerator();
+
+
     // NEED TO MAKE THIS PRETTIER, this is just for testing purposes:
     // private Player player = new Player();
-    private long testLong = 0l;
-    private final World world = new World(testLong);
+    private long testWorldSeed = 4320l;
+    private final World world = new World(testWorldSeed);
     private final Camera camera = new Camera(ROWS, COLS);
     private final WorldPresenter worldPresenter = new WorldPresenter(camera);
+
+
 
 
     @Override
@@ -60,13 +65,6 @@ public class Main extends Application {
         bgGrid = new BackgroundGrid(bgGraphicsContext, COLS, ROWS, SCALE);
         fgGrid = new TerminalGrid(loadAtlas(), fgGraphicContext, COLS, ROWS, SCALE);
         fgGrid.clear(Color.BLACK);
-
-        /*drawBorder(Color.GRAY);
-        drawText(2, 2, "ANSI ROGUELIKE - Bm437 Acer VGA 8x8", Color.web("#55FF55"));
-        drawText(2, 4, "Extracted straight from the EBDT bitmap strikes", Color.web("#AAAAAA"));
-        drawText(2, 6, "Box drawing: \u2554\u2550\u2550\u2557 \u2551  \u2551 \u255A\u2550\u2550\u255D", Color.web("#5555FF"));
-        drawText(2, 8, "Card suits: \u2660 \u2665 \u2666 \u2663", Color.web("#FF5555"));
-        drawText(2, 10, "House symbol: \u2302", Color.SEAGREEN);*/
 
         StackPane root = new StackPane(bgCanvas, fgCanvas);
         Scene scene = new Scene(root, Color.BLACK);
@@ -162,15 +160,13 @@ public class Main extends Application {
         return Main.class.getResourceAsStream("/images/fonts/cp437_8x8_atlas.png");
     }
 
+
     public static void main(String[] args) throws IOException {
 
         launch(args); // an inherited class from Application (JavaFX)
-        NoiseGenerator noise = new NoiseGenerator(3333314l, 4, 0.7, 0.5f, 1f);
 
-
-        NoiseImageSaver noiseImageSaver = new NoiseImageSaver();
-
-        noiseImageSaver.savePixelatedNoise(noise.getJNoise(), "pixelated_noise4.png", 64, 64, 1);
+        /*NoiseGenerator noiseGenerator = new NoiseGenerator(this.testWorldSeed);
+        noiseGenerator.makeTestNoise(339775653333314l, 4, 3, 0.13f, 1.1f);*/
 
 
     }

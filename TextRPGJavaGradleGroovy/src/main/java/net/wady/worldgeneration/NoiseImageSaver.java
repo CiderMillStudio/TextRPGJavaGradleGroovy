@@ -56,10 +56,10 @@ public class NoiseImageSaver {
     private int grayscaleCondensor(int grayscaleValue) {
 
         int comparatorValue = 0;
-        if (grayscaleValue >= 230) comparatorValue = 4;
-        else if (grayscaleValue >= 200) comparatorValue = 3; // WHITE GRAY (mtns?)
-        else if (grayscaleValue >= 140) comparatorValue = 2; // LIGHT GRAY (forest?)
-        else if (grayscaleValue >= 100) comparatorValue = 1; // DARK GRAY (water?)
+        if (grayscaleValue >= 215) comparatorValue = 4; // WHITE
+        else if (grayscaleValue >= 190) comparatorValue = 3; // WHITE GRAY (mtns?)
+        else if (grayscaleValue >= 125) comparatorValue = 2; // LIGHT GRAY (forest?)
+        else if (grayscaleValue >= 75) comparatorValue = 1; // DARK GRAY (water?)
         else comparatorValue = 0; // BLACK (Deep water?)
 
         switch (comparatorValue) {

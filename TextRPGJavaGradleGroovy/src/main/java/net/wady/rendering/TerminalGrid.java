@@ -49,7 +49,7 @@ public class TerminalGrid {
         }
 
         String decoded = new String(raw, cp437);
-        System.out.println(decoded);
+        // System.out.println(decoded);
 
         Map<Character, Integer> map = new HashMap<>(512); // we make the initial capacity 512 as a
         // performance nicety. (a hashmap resizes/rehashes everything once it gets too full relative to its internal
