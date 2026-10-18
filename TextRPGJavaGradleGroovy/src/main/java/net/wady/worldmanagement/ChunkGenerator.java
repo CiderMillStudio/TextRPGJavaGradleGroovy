@@ -6,7 +6,7 @@ import net.wady.worldgeneration.NoiseRangeFinder;
 
 public class ChunkGenerator {
     private final long worldSeed;
-    private NoisePipelineBuilder overworldTerrainNoise;
+    private NoisePipelineBuilder overworldElevationNoise;
     //private NoisePipelineBuilder overworldCorruptabilityNoise;
 
     private double normalizeValue;
@@ -24,10 +24,10 @@ public class ChunkGenerator {
 
     private void setUpNoisePipelines(long worldSeed) {
 
-        this.overworldTerrainNoise = new NoisePipelineBuilder(Hasher.mix(worldSeed), numOfOctaves, 0.01, persistence, 1.65f);
+        this.overworldElevationNoise = new NoisePipelineBuilder(Hasher.mix(worldSeed), numOfOctaves, 0.02, persistence, 1.65f);
 
         NoiseRangeFinder rangeFinder = new NoiseRangeFinder();
-        double[] minMax = rangeFinder.findRange(overworldTerrainNoise.getJNoise(), 4_000_000, 100_000);
+        double[] minMax = rangeFinder.findRange(overworldElevationNoise.getJNoise(), 4_000_000, 100_000);
         Math.clamp(peakFactor, 0, 1);
         normalizeValue = peakFactor * minMax[1];  // [0] is the minimum, [1] is the maximum ; peakFactor is a float that influences how likely 'peaks and troughs' are to form
 
@@ -53,14 +53,14 @@ public class ChunkGenerator {
         System.out.println("\n\nCHUNK GENERATOR: maximumPossibleValue is = " + maximumPossibleValue);
 
         for (int i = 0; i < terrainTypes.length; i++) {
-            double noise = overworldTerrainNoise.getJNoise().evaluateNoise(currentX, currentY);
+            double noise = overworldElevationNoise.getJNoise().evaluateNoise(currentX, currentY);
             double normalizedNoise = (noise + normalizeValue);
 
             normalizedNoise = Math.clamp(normalizedNoise, 0.0, maximumPossibleValue); // Now we have a value between 0.0 and the Maximum Possible Value;
 
             normalizedNoise = normalizedNoise / maximumPossibleValue;
 
-            int amplifiedNoise = (int) Math.round(normalizedNoise * 4f);
+            int amplifiedNoise = (int) Math.round(normalizedNoise * (TerrainType.values().length - 1));
 
             int elevationValue = Math.round((float) amplifiedNoise);
 
